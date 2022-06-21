@@ -2,6 +2,7 @@ import json, os
 from flask import Flask, request
 from flask_cors import CORS
 from dotenv import load_dotenv
+from waitress import serve
 from grim_perceval.perceval.backends.core.github import GitHub
 from grim_perceval.perceval.backends.core.git import Git
 
@@ -245,3 +246,6 @@ def issues_authors(owner, repo):
         count[str(i)] = creators.count(i)
 
     return count
+
+if __name__ == "__main__":
+    serve(app, host='0.0.0.0', port=80)
