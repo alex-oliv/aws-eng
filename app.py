@@ -157,6 +157,7 @@ def get_total_changes_by_time(owner, repo, begin=None, final=None):
     data = get_commits(owner, repo)
 
     authors_files = {}
+    print(data)
     total_files_changed(data['commits'], authors_files, begin, final)
 
     return authors_files
