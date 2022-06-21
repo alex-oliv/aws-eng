@@ -154,7 +154,7 @@ def total_files_changed(dates, authors_files, begin=None, final=None):
 
 
 def get_total_changes_by_time(owner, repo, begin=None, final=None):
-    data = json.load(get_commits(owner, repo))
+    data = json.loads(get_commits(owner, repo))
 
     authors_files = {}
     total_files_changed(data['commits'], authors_files, begin, final)
