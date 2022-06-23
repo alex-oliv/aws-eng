@@ -1,4 +1,5 @@
-import json, os
+import json
+import os
 from flask import Flask, request
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -10,6 +11,7 @@ from grim_perceval.perceval.backends.core.git import Git
 app = Flask(__name__)
 CORS(app)
 load_dotenv()
+
 
 @app.route('/')
 def home():
@@ -41,13 +43,13 @@ def show_issues_authors(owner, repo):
 def show_total_commits(owner, repo):
     result = get_commits(owner, repo)
     return result
-    
+
 
 @app.route('/info/files-changed/<owner>/<repo>')
 def show_total_files_changed(owner, repo):
     start = request.args.get('start')
     end = request.args.get('end')
-    
+
     result = get_total_changes_by_time(owner, repo, start, end)
     return result
 
@@ -163,20 +165,19 @@ def get_total_changes_by_time(owner, repo, begin=None, final=None):
 
 
 def get_issues(owner, repo):
-    issues = 0
     pulls = 0
     aux = []
 
     parsed_token = os.environ['token']
     token = [parsed_token]
     repo = GitHub(owner=owner, repository=repo, api_token=token)
+
     for item in repo.fetch():
         if 'pull_request' in item['data']:
             pulls += 1
         else:
             labels = parse_arrays(item['data']['labels'], 'name')
-            assignees = len(parse_arrays(
-                item['data']['assignees'], 'login'))
+            assignees = parse_arrays(item['data']['assignees'], 'login')
 
             aux.append({'number': item['data']['number'],
                         'creator': item['data']['user']['login'],
@@ -187,8 +188,7 @@ def get_issues(owner, repo):
                         'created_at': item['data']['created_at'],
                         'closed_at': item['data']['closed_at']
                         })
-            issues += 1
-
+            
     result = {}
     result['issues'] = aux
     return json.dumps(result)
@@ -247,6 +247,7 @@ def issues_authors(owner, repo):
         count[str(i)] = creators.count(i)
 
     return count
+
 
 if __name__ == "__main__":
     serve(app, host='0.0.0.0', port=80)
