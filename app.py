@@ -29,6 +29,9 @@ def show_issues(owner, repo):
     start = request.args.get('start')
     end = request.args.get('end')
 
+    if(start == ''): start = None
+    if(end == ''): end = None
+
     result = issues_dates(owner, repo, start, end)
     return result
 
