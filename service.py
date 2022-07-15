@@ -68,8 +68,8 @@ def get_commits(owner, repo):
         removed = 0
         for files in commit['data']['files']:
             if(not files['added'] == '-' and not files['removed'] == '-'):
-                added += files['added']
-                removed += files['removed']
+                added += int(files['added'])
+                removed += int(files['removed'])
     
         info = {
             date: {
